@@ -1106,16 +1106,41 @@
         <h2>Punto Gelato</h2>
         <p>Sistema de Gestión</p>
       </div>
-      <div class="login-field">
-        <label>Email</label>
-        <input type="email" id="login-email" placeholder="usuario@email.com"
-          onkeydown="if(event.key==='Enter')hacerLogin()">
+
+      <!-- Paso 0: configurar Firebase (solo si no hay config guardada) -->
+      <div id="setup-firebase" style="display:none">
+        <p style="color:rgba(253,246,236,0.5);font-size:0.82rem;margin-bottom:1rem;text-align:center;line-height:1.5">
+          Primera vez en este dispositivo.<br>Ingresá las credenciales Firebase.
+        </p>
+        <div class="login-field">
+          <label>API Key</label>
+          <input type="text" id="setup-apikey" placeholder="AIzaSy...">
+        </div>
+        <div class="login-field">
+          <label>Project ID</label>
+          <input type="text" id="setup-projectid" placeholder="punto-gelato-xxxxx">
+        </div>
+        <div class="login-field">
+          <label>App ID</label>
+          <input type="text" id="setup-appid" placeholder="1:123:web:abc">
+        </div>
+        <button class="login-btn" onclick="guardarSetup()">Continuar →</button>
       </div>
-      <div class="login-field">
-        <label>Contraseña</label>
-        <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')hacerLogin()">
+
+      <!-- Paso 1: login normal -->
+      <div id="setup-login">
+        <div class="login-field">
+          <label>Email</label>
+          <input type="email" id="login-email" placeholder="usuario@email.com"
+            onkeydown="if(event.key==='Enter')hacerLogin()">
+        </div>
+        <div class="login-field">
+          <label>Contraseña</label>
+          <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')hacerLogin()">
+        </div>
+        <button class="login-btn" id="login-btn" onclick="hacerLogin()">Ingresar</button>
       </div>
-      <button class="login-btn" id="login-btn" onclick="hacerLogin()">Ingresar</button>
+
       <div class="login-error" id="login-error"></div>
     </div>
   </div>
@@ -1807,13 +1832,39 @@
     // ── AUTO-RECONECTAR ────────────────────────────────────
     async function autoConectar() {
       const cfg = localStorage.getItem('pg_fb_config');
-      if (!cfg) return;
+      if (!cfg) {
+        // Primera vez en este dispositivo — mostrar formulario de setup
+        document.getElementById('setup-firebase').style.display = 'block';
+        document.getElementById('setup-login').style.display = 'none';
+        return;
+      }
+      // Hay config guardada — rellenar campos y mostrar login directo
       const { apiKey, projectId, appId } = JSON.parse(cfg);
       document.getElementById('fb-apikey').value = apiKey;
       document.getElementById('fb-projectid').value = projectId;
       document.getElementById('fb-appid').value = appId;
-      // No hacer login automático — siempre pedir credenciales
+      document.getElementById('setup-firebase').style.display = 'none';
+      document.getElementById('setup-login').style.display = 'block';
     }
+
+    window.guardarSetup = async function () {
+      const apiKey = document.getElementById('setup-apikey').value.trim();
+      const projectId = document.getElementById('setup-projectid').value.trim();
+      const appId = document.getElementById('setup-appid').value.trim();
+      if (!apiKey || !projectId || !appId) {
+        mostrarErrorLogin('Completá todos los campos');
+        return;
+      }
+      localStorage.setItem('pg_fb_config', JSON.stringify({ apiKey, projectId, appId }));
+      // Rellenar también los campos de config
+      document.getElementById('fb-apikey').value = apiKey;
+      document.getElementById('fb-projectid').value = projectId;
+      document.getElementById('fb-appid').value = appId;
+      // Mostrar login
+      document.getElementById('setup-firebase').style.display = 'none';
+      document.getElementById('setup-login').style.display = 'block';
+      document.getElementById('login-error').classList.remove('show');
+    };
 
     // ═══════════════════════════════════════════════════════
     //  ESTADO LOCAL
