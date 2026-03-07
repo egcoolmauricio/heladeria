@@ -882,10 +882,239 @@
     .barcode-row input {
       flex: 1;
     }
+
+    /* ── AUTH / LOGIN ── */
+    #auth-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--brown);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background-image: radial-gradient(ellipse at 20% 50%, rgba(200, 115, 42, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(212, 168, 71, 0.1) 0%, transparent 50%);
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 380px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.4s ease;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-logo img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(200, 115, 42, 0.6);
+      box-shadow: 0 0 30px rgba(200, 115, 42, 0.3);
+      margin-bottom: 1rem;
+    }
+
+    .login-logo h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--cream);
+    }
+
+    .login-logo p {
+      font-size: 0.8rem;
+      color: rgba(253, 246, 236, 0.4);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    .login-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .login-field label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(253, 246, 236, 0.5);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .login-field input {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .login-field input::placeholder {
+      color: rgba(253, 246, 236, 0.25);
+    }
+
+    .login-field input:focus {
+      border-color: var(--caramel);
+      box-shadow: 0 0 0 3px rgba(200, 115, 42, 0.2);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 0.85rem;
+      background: var(--caramel);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .login-btn:hover {
+      background: var(--caramel-light);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(200, 115, 42, 0.4);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-error {
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      font-size: 0.85rem;
+      color: #ff9a9a;
+      margin-top: 1rem;
+      display: none;
+      text-align: center;
+    }
+
+    .login-error.show {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    /* ── ROL BADGE ── */
+    .rol-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .rol-admin {
+      background: rgba(212, 168, 71, 0.2);
+      color: var(--gold);
+      border: 1px solid rgba(212, 168, 71, 0.4);
+    }
+
+    .rol-vendedor {
+      background: rgba(126, 200, 176, 0.2);
+      color: var(--mint);
+      border: 1px solid rgba(126, 200, 176, 0.4);
+    }
+
+    /* ── ELEMENTOS SOLO ADMIN ── */
+    .admin-only {
+      display: none;
+    }
+
+    /* ── LOGOUT BTN ── */
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: rgba(253, 246, 236, 0.6);
+      padding: 0.35rem 0.8rem;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .logout-btn:hover {
+      color: var(--cream);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* ── VENDEDOR BLOQUEADO ── */
+    .blocked-overlay {
+      position: relative;
+    }
+
+    .blocked-overlay::after {
+      content: '🔒 Solo administrador';
+      position: absolute;
+      inset: 0;
+      background: rgba(253, 246, 236, 0.85);
+      border-radius: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      backdrop-filter: blur(2px);
+    }
   </style>
 </head>
 
 <body>
+
+  <!-- ══ LOGIN SCREEN ══ -->
+  <div id="auth-screen">
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="https://estev1000.github.io/Punto-Gelato/logo%20de%20Punto%20Gelato.jpg" alt="Punto Gelato">
+        <h2>Punto Gelato</h2>
+        <p>Sistema de Gestión</p>
+      </div>
+      <div class="login-field">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="usuario@email.com"
+          onkeydown="if(event.key==='Enter')hacerLogin()">
+      </div>
+      <div class="login-field">
+        <label>Contraseña</label>
+        <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')hacerLogin()">
+      </div>
+      <button class="login-btn" id="login-btn" onclick="hacerLogin()">Ingresar</button>
+      <div class="login-error" id="login-error"></div>
+    </div>
+  </div>
 
   <!-- HEADER -->
   <header>
@@ -902,17 +1131,19 @@
         <span>🖨️</span><span>Ticket</span>
       </button>
     </div>
+    <div id="rol-badge-wrap" style="margin-left:0.5rem"></div>
     <div class="fb-status" id="fb-status">
       <div class="fb-dot" id="fb-dot"></div>
       <span id="fb-label">local</span>
     </div>
+    <button class="logout-btn" onclick="cerrarSesion()" title="Cerrar sesión">⏻ Salir</button>
   </header>
 
   <!-- NAV TABS -->
   <div class="nav-tabs">
     <div class="nav-tab active" onclick="showPage('config')" data-page="config">⚙️ Configuración</div>
     <div class="nav-tab" onclick="showPage('venta')" data-page="venta">🛒 Compra / Venta</div>
-    <div class="nav-tab" onclick="showPage('stock')" data-page="stock">📦 Stock e Inventario</div>
+    <div class="nav-tab admin-only" onclick="showPage('stock')" data-page="stock">📦 Stock e Inventario</div>
     <div class="nav-tab" onclick="showPage('ventas')" data-page="ventas">📅 Ventas</div>
   </div>
 
@@ -925,7 +1156,7 @@
   <div class="page active" id="page-config">
 
     <!-- Precios -->
-    <div class="card">
+    <div class="card admin-only">
       <div class="card-title">💰 Configuración de Precios</div>
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.2rem">Configura los precios de cada tipo de
         helado:</p>
@@ -961,7 +1192,7 @@
     </div>
 
     <!-- Sabores -->
-    <div class="card">
+    <div class="card admin-only">
       <div class="card-title">🍨 Gestión de Sabores</div>
       <div style="display:flex;gap:0.8rem;margin-bottom:1.2rem">
         <div class="field" style="flex:1">
@@ -977,7 +1208,7 @@
     </div>
 
     <!-- Firebase Config -->
-    <div class="card">
+    <div class="card admin-only">
       <div class="card-title">🔥 Conexión Firebase <span
           style="font-size:0.75rem;color:var(--text-muted);font-weight:400">(opcional — para guardar en la nube)</span>
       </div>
@@ -1289,7 +1520,7 @@
     </div>
 
     <!-- Venta manual -->
-    <div class="card">
+    <div class="card admin-only">
       <div class="card-title">➕ Agregar Venta Manual</div>
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem">Registra una venta manualmente en el
         historial.</p>
@@ -1317,7 +1548,7 @@
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
         <div class="card-title" style="margin:0">🧾 Historial de Ventas</div>
-        <div style="display:flex;gap:0.6rem">
+        <div style="display:flex;gap:0.6rem" class="admin-only">
           <button class="btn btn-secondary btn-sm" onclick="exportarExcel()">📊 Exportar Excel</button>
           <button class="btn btn-danger btn-sm" onclick="confirmarLimpiar()">🗑️ Limpiar Historial</button>
         </div>
@@ -1426,48 +1657,154 @@
 
   <script type="module">
     // ═══════════════════════════════════════════════════════
-    //  FIREBASE SETUP (opcional)
+    //  FIREBASE SETUP + AUTH
     // ═══════════════════════════════════════════════════════
-    let db = null, fbReady = false;
+    let db = null, auth = null, fbReady = false, currentUser = null, currentRol = null;
     let fbCollection, fbAddDoc, fbGetDocs, fbDoc, fbSetDoc, fbGetDoc, fbDeleteDoc, fbQuery, fbOrderBy, fbWriteBatch, onSnapshot;
 
+    // Roles definidos por email — se guardan en Firestore colección "roles"
+    // { email: "admin@x.com", rol: "admin" } | { email: "vend@x.com", rol: "vendedor" }
+
+    async function inicializarFirebase(config) {
+      const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+      const fb = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      const fba = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
+
+      fbCollection = fb.collection; fbAddDoc = fb.addDoc; fbGetDocs = fb.getDocs;
+      fbDoc = fb.doc; fbSetDoc = fb.setDoc; fbGetDoc = fb.getDoc;
+      fbDeleteDoc = fb.deleteDoc; fbQuery = fb.query; fbOrderBy = fb.orderBy;
+      fbWriteBatch = fb.writeBatch; onSnapshot = fb.onSnapshot;
+
+      const app = initializeApp(config, 'pg-' + Date.now());
+      db = fb.getFirestore(app);
+      auth = fba.getAuth(app);
+      fbReady = true;
+
+      // Guardar config
+      localStorage.setItem('pg_fb_config', JSON.stringify(config));
+
+      document.getElementById('fb-dot').className = 'fb-dot ok';
+      document.getElementById('fb-label').textContent = config.projectId;
+      document.getElementById('fb-connect-status').textContent = '✓ Conectado';
+
+      return { fb, fba, auth };
+    }
+
+    // ── LOGIN ──────────────────────────────────────────────
+    window.hacerLogin = async function () {
+      const email = document.getElementById('login-email').value.trim();
+      const pass = document.getElementById('login-pass').value;
+      const btn = document.getElementById('login-btn');
+      const errEl = document.getElementById('login-error');
+
+      if (!email || !pass) { mostrarErrorLogin('Completá email y contraseña'); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Ingresando...';
+      errEl.classList.remove('show');
+
+      try {
+        // Obtener config guardada
+        const cfgRaw = localStorage.getItem('pg_fb_config');
+        if (!cfgRaw) { mostrarErrorLogin('Primero configurá Firebase en ⚙️ Configuración'); btn.disabled = false; btn.textContent = 'Ingresar'; return; }
+        const config = JSON.parse(cfgRaw);
+
+        const { fba, auth: authInst } = await inicializarFirebase(config);
+        const cred = await fba.signInWithEmailAndPassword(authInst, email, pass);
+        currentUser = cred.user;
+
+        // Obtener rol desde Firestore
+        const rolSnap = await fbGetDoc(fbDoc(db, 'roles', currentUser.uid));
+        currentRol = rolSnap.exists() ? rolSnap.data().rol : 'vendedor';
+
+        aplicarRol(currentRol, email);
+        document.getElementById('auth-screen').style.display = 'none';
+
+        await cargarTodo();
+        escucharVentas();
+        toast(`✓ Bienvenido, ${email.split('@')[0]}`, 'success');
+
+      } catch (e) {
+        const msgs = {
+          'auth/invalid-credential': 'Email o contraseña incorrectos',
+          'auth/user-not-found': 'Usuario no encontrado',
+          'auth/wrong-password': 'Contraseña incorrecta',
+          'auth/invalid-email': 'Email inválido',
+          'auth/too-many-requests': 'Demasiados intentos. Intentá más tarde',
+        };
+        mostrarErrorLogin(msgs[e.code] || 'Error: ' + e.message);
+        btn.disabled = false;
+        btn.textContent = 'Ingresar';
+      }
+    };
+
+    function mostrarErrorLogin(msg) {
+      const el = document.getElementById('login-error');
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+
+    // ── APLICAR ROL ────────────────────────────────────────
+    function aplicarRol(rol, email) {
+      currentRol = rol;
+      const esAdmin = rol === 'admin';
+
+      // Mostrar/ocultar elementos admin-only
+      document.querySelectorAll('.admin-only').forEach(el => {
+        el.style.display = esAdmin ? '' : 'none';
+      });
+
+      // Badge de rol en el header
+      document.getElementById('rol-badge-wrap').innerHTML = esAdmin
+        ? `<span class="rol-badge rol-admin">👑 Admin</span>`
+        : `<span class="rol-badge rol-vendedor">🛒 Vendedor</span>`;
+
+      // Si es vendedor y estaba en config, redirigir a venta
+      if (!esAdmin) {
+        showPage('venta');
+        // Ocultar tab config completamente
+        document.querySelector('.nav-tab[data-page="config"]').style.display = 'none';
+        // En historial: ocultar botones editar/eliminar de ventas
+        document.querySelectorAll('#historial-body .btn-secondary, #historial-body .btn-danger').forEach(b => b.style.display = 'none');
+      }
+
+      // Exponer rol globalmente para uso en renders
+      window._esAdmin = esAdmin;
+    }
+
+    // ── LOGOUT ────────────────────────────────────────────
+    window.cerrarSesion = async function () {
+      if (auth) {
+        const { signOut } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
+        await signOut(auth);
+      }
+      currentUser = null; currentRol = null; window._esAdmin = false;
+      document.getElementById('auth-screen').style.display = 'flex';
+      document.getElementById('login-email').value = '';
+      document.getElementById('login-pass').value = '';
+      document.getElementById('login-error').classList.remove('show');
+      document.getElementById('login-btn').disabled = false;
+      document.getElementById('login-btn').textContent = 'Ingresar';
+    };
+
+    // ── CONECTAR FIREBASE DESDE CONFIG (admin ya logueado) ─
     window.conectarFirebase = async function () {
       const apiKey = document.getElementById('fb-apikey').value.trim();
       const projectId = document.getElementById('fb-projectid').value.trim();
       const appId = document.getElementById('fb-appid').value.trim();
       if (!apiKey || !projectId || !appId) { toast('Completá todos los campos de Firebase', 'error'); return; }
-
       try {
-        const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
-        const fb = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-        fbCollection = fb.collection; fbAddDoc = fb.addDoc; fbGetDocs = fb.getDocs;
-        fbDoc = fb.doc; fbSetDoc = fb.setDoc; fbGetDoc = fb.getDoc;
-        fbDeleteDoc = fb.deleteDoc; fbQuery = fb.query; fbOrderBy = fb.orderBy;
-        fbWriteBatch = fb.writeBatch; onSnapshot = fb.onSnapshot;
-
-        const app = initializeApp({ apiKey, authDomain: `${projectId}.firebaseapp.com`, projectId, storageBucket: `${projectId}.appspot.com`, appId }, 'pg-' + Date.now());
-        db = fb.getFirestore(app);
-        fbReady = true;
-
-        // Guardar config en localStorage
-        localStorage.setItem('pg_fb_config', JSON.stringify({ apiKey, projectId, appId }));
-
-        document.getElementById('fb-dot').className = 'fb-dot ok';
-        document.getElementById('fb-label').textContent = projectId;
-        document.getElementById('fb-connect-status').textContent = '✓ Conectado';
+        await inicializarFirebase({ apiKey, authDomain: `${projectId}.firebaseapp.com`, projectId, storageBucket: `${projectId}.appspot.com`, appId });
         toast(`✓ Conectado a Firebase (${projectId})`, 'success');
-
-        // Recargar desde Firebase
         await cargarTodo();
         escucharVentas();
       } catch (e) {
         document.getElementById('fb-dot').className = 'fb-dot err';
-        document.getElementById('fb-connect-status').textContent = '✗ Error: ' + e.message;
-        toast('Error conectando Firebase', 'error');
+        toast('Error conectando Firebase: ' + e.message, 'error');
       }
     };
 
-    // Auto-reconectar si hay config guardada
+    // ── AUTO-RECONECTAR ────────────────────────────────────
     async function autoConectar() {
       const cfg = localStorage.getItem('pg_fb_config');
       if (!cfg) return;
@@ -1475,7 +1812,7 @@
       document.getElementById('fb-apikey').value = apiKey;
       document.getElementById('fb-projectid').value = projectId;
       document.getElementById('fb-appid').value = appId;
-      await conectarFirebase();
+      // No hacer login automático — siempre pedir credenciales
     }
 
     // ═══════════════════════════════════════════════════════
@@ -1531,7 +1868,7 @@
       document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
       document.getElementById('page-' + p).classList.add('active');
-      document.querySelector(`.nav-tab[data-page="${p}"]`).classList.add('active');
+      document.querySelector(`.nav-tab[data-page="${p}"]`)?.classList.add('active');
     };
 
     // ═══════════════════════════════════════════════════════
@@ -1577,8 +1914,7 @@
         return;
       }
       el.innerHTML = state.sabores.map((s, i) => `
-    <div class="sabor-chip">
-      🍨 ${s}
+    <div class="sabor-chip">🍨 ${s}
       <button onclick="eliminarSabor(${i})" title="Eliminar">✕</button>
     </div>`).join('');
     }
@@ -1594,8 +1930,6 @@
       </select>
     </div>`;
       document.getElementById('sabores-selects').innerHTML = Array.from({ length: n }, (_, i) => sel(i + 1)).join('');
-
-      // Pote sabores (3 siempre disponibles)
       const psel = document.getElementById('pote-sabores-selects');
       if (psel) psel.innerHTML = [sel(1), sel(2), sel(3)].join('');
     }
@@ -1670,14 +2004,12 @@
     <tr>
       <td><strong>${p.nombre}</strong></td>
       <td>$${fmt(p.precio)}</td>
-      <td>
-        <span class="tag ${p.stock > 5 ? 'tag-green' : p.stock > 0 ? 'tag-caramel' : 'tag-red'}">${p.stock} unid.</span>
-      </td>
+      <td><span class="tag ${p.stock > 5 ? 'tag-green' : p.stock > 0 ? 'tag-caramel' : 'tag-red'}">${p.stock} unid.</span></td>
       <td style="font-size:0.8rem;color:var(--text-muted)">${p.barcode || '—'}</td>
-      <td>
+      <td>${window._esAdmin ? `
         <button class="btn btn-secondary btn-sm" onclick="abrirEditProducto(${i})">✏️</button>
         <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${i})">🗑️</button>
-      </td>
+      ` : '—'}</td>
     </tr>`).join('');
     }
 
@@ -1727,16 +2059,14 @@
       document.getElementById('prod-precio').value = '';
       document.getElementById('prod-stock').value = '';
       document.getElementById('prod-barcode').value = '';
-      renderProductosTable();
-      renderProductosVenta();
+      renderProductosTable(); renderProductosVenta();
       toast('✓ Producto agregado', 'success');
     };
 
     window.eliminarProducto = async function (i) {
       state.productos.splice(i, 1);
       await guardarProductos();
-      renderProductosTable();
-      renderProductosVenta();
+      renderProductosTable(); renderProductosVenta();
     };
 
     window.abrirEditProducto = function (i) {
@@ -1760,8 +2090,7 @@
       };
       await guardarProductos();
       cerrarModal('modal-edit-prod');
-      renderProductosTable();
-      renderProductosVenta();
+      renderProductosTable(); renderProductosVenta();
       toast('✓ Producto actualizado', 'success');
     };
 
@@ -1784,10 +2113,10 @@
     };
 
     window.renderFormato = function () {
-      const fmt = document.querySelector('input[name="formato"]:checked').value;
-      document.getElementById('panel-cucurucho').style.display = fmt === 'cucurucho' ? '' : 'none';
-      document.getElementById('panel-pote').style.display = fmt === 'pote' ? '' : 'none';
-      if (fmt === 'pote') renderSaboresSelect();
+      const f = document.querySelector('input[name="formato"]:checked').value;
+      document.getElementById('panel-cucurucho').style.display = f === 'cucurucho' ? '' : 'none';
+      document.getElementById('panel-pote').style.display = f === 'pote' ? '' : 'none';
+      if (f === 'pote') renderSaboresSelect();
     };
 
     // ═══════════════════════════════════════════════════════
@@ -1796,10 +2125,7 @@
     window.agregarCucurucho = function () {
       const n = parseInt(document.querySelector('input[name="nsabores"]:checked').value);
       const sabores = [];
-      for (let i = 1; i <= n; i++) {
-        const v = document.getElementById(`sabor-sel-${i}`)?.value;
-        if (v) sabores.push(v);
-      }
+      for (let i = 1; i <= n; i++) { const v = document.getElementById(`sabor-sel-${i}`)?.value; if (v) sabores.push(v); }
       const p = state.precios;
       const precio = [p.s1, p.s2, p.s3][n - 1] || 0;
       if (!precio) { toast('Configurá el precio primero', 'error'); return; }
@@ -1811,8 +2137,7 @@
 
     window.agregarPote = function () {
       const tam = document.querySelector('input[name="tam-pote"]:checked').value;
-      const p = state.precios;
-      const precios = { '250': p.p250, '500': p.p500, '1000': p.p1k };
+      const precios = { '250': state.precios.p250, '500': state.precios.p500, '1000': state.precios.p1k };
       const precio = precios[tam] || 0;
       if (!precio) { toast('Configurá el precio primero', 'error'); return; }
       const nombres = { '250': '1/4 Kg', '500': '1/2 Kg', '1000': '1 Kg' };
@@ -1844,15 +2169,10 @@
       <td>$${fmt(item.precio)}</td>
       <td><button class="btn btn-danger btn-sm" onclick="quitarCarrito(${i})">✕</button></td>
     </tr>`).join('');
-      const total = state.carrito.reduce((a, i) => a + i.precio, 0);
-      document.getElementById('carrito-total').textContent = `$${fmt(total)}`;
+      document.getElementById('carrito-total').textContent = `$${fmt(state.carrito.reduce((a, i) => a + i.precio, 0))}`;
     }
 
-    window.quitarCarrito = function (i) {
-      state.carrito.splice(i, 1);
-      renderCarrito();
-    };
-
+    window.quitarCarrito = function (i) { state.carrito.splice(i, 1); renderCarrito(); };
     window.vaciarCarrito = function () { state.carrito = []; renderCarrito(); };
 
     window.finalizarCompra = async function () {
@@ -1861,37 +2181,21 @@
       const desc = state.carrito.map(i => i.desc).join(' | ');
       const items = [...state.carrito];
 
-      // Descontar stock de productos envasados
       items.forEach(item => {
-        if (item.prodIdx !== undefined) {
-          state.productos[item.prodIdx].stock = Math.max(0, state.productos[item.prodIdx].stock - 1);
-        }
+        if (item.prodIdx !== undefined) state.productos[item.prodIdx].stock = Math.max(0, state.productos[item.prodIdx].stock - 1);
       });
 
-      // Descontar stock insumos
-      const cucuruchos = items.filter(i => i.desc.includes('cucurucho')).length;
-      const potes250 = items.filter(i => i.desc.includes('1/4 Kg')).length;
-      const potes500 = items.filter(i => i.desc.includes('1/2 Kg')).length;
-      const potes1kg = items.filter(i => i.desc.includes('1 Kg') && !i.desc.includes('1/4') && !i.desc.includes('1/2')).length;
-      state.stock.cucuruchos = Math.max(0, state.stock.cucuruchos - cucuruchos);
-      state.stock.potes250 = Math.max(0, state.stock.potes250 - potes250);
-      state.stock.potes500 = Math.max(0, state.stock.potes500 - potes500);
-      state.stock.potes1kg = Math.max(0, state.stock.potes1kg - potes1kg);
+      state.stock.cucuruchos = Math.max(0, state.stock.cucuruchos - items.filter(i => i.desc.includes('cucurucho')).length);
+      state.stock.potes250 = Math.max(0, state.stock.potes250 - items.filter(i => i.desc.includes('1/4 Kg')).length);
+      state.stock.potes500 = Math.max(0, state.stock.potes500 - items.filter(i => i.desc.includes('1/2 Kg')).length);
+      state.stock.potes1kg = Math.max(0, state.stock.potes1kg - items.filter(i => i.desc.includes('1 Kg') && !i.desc.includes('1/4') && !i.desc.includes('1/2')).length);
 
-      const venta = {
-        id: Date.now().toString(),
-        fecha: new Date().toISOString(),
-        descripcion: desc,
-        total,
-        items
-      };
-
+      const venta = { id: Date.now().toString(), fecha: new Date().toISOString(), descripcion: desc, total, items, vendedor: currentUser?.email || 'local' };
       await guardarVenta(venta);
       await guardarProductos();
       lsSet('stock', state.stock);
       if (fbReady) await fbSetDoc(fbDoc(db, 'configuracion', 'stock'), state.stock);
 
-      // Mostrar resumen
       document.getElementById('modal-resumen-body').innerHTML = `
     ${items.map(i => `<div style="display:flex;justify-content:space-between"><span>${i.desc}</span><strong>$${fmt(i.precio)}</strong></div>`).join('')}
     <div style="border-top:1px solid var(--border);margin-top:0.8rem;padding-top:0.8rem;display:flex;justify-content:space-between">
@@ -1901,12 +2205,7 @@
       document.getElementById('modal-resumen').classList.add('open');
 
       state.carrito = [];
-      renderCarrito();
-      renderStockUI();
-      renderProductosTable();
-      renderHistorial();
-      renderVentasDiarias();
-      renderStats();
+      renderCarrito(); renderStockUI(); renderProductosTable(); renderHistorial(); renderVentasDiarias(); renderStats();
     };
 
     // ═══════════════════════════════════════════════════════
@@ -1927,9 +2226,7 @@
       onSnapshot(q, snap => {
         state.ventas = [];
         snap.forEach(d => state.ventas.push({ id: d.id, ...d.data() }));
-        renderHistorial();
-        renderVentasDiarias();
-        renderStats();
+        renderHistorial(); renderVentasDiarias(); renderStats();
       });
     }
 
@@ -1942,6 +2239,7 @@
 
     function renderHistorial() {
       const tbody = document.getElementById('historial-body');
+      const esAdmin = window._esAdmin;
       if (!state.ventas.length) {
         tbody.innerHTML = '<tr class="empty-row"><td colspan="4">No hay ventas registradas.</td></tr>';
         return;
@@ -1949,11 +2247,16 @@
       tbody.innerHTML = state.ventas.map((v, i) => `
     <tr>
       <td style="font-size:0.82rem;color:var(--text-muted)">${fmtFecha(v.fecha)}</td>
-      <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${v.descripcion}">${v.descripcion}</td>
+      <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${v.descripcion}">
+        ${v.descripcion}
+        ${v.vendedor ? `<span style="font-size:0.72rem;color:var(--text-muted);margin-left:0.4rem">(${v.vendedor.split('@')[0]})</span>` : ''}
+      </td>
       <td><strong>$${fmt(v.total)}</strong></td>
       <td style="display:flex;gap:0.4rem">
-        <button class="btn btn-secondary btn-sm" onclick="abrirEditVenta(${i})">✏️</button>
-        <button class="btn btn-danger btn-sm" onclick="eliminarVenta(${i})">🗑️</button>
+        ${esAdmin ? `
+          <button class="btn btn-secondary btn-sm" onclick="abrirEditVenta(${i})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="eliminarVenta(${i})">🗑️</button>
+        ` : '—'}
       </td>
     </tr>`).join('');
     }
@@ -1962,60 +2265,38 @@
       const el = document.getElementById('ventas-diarias');
       const now = new Date();
       const filtro = state.filtroVentas;
-
       let ventas = state.ventas.filter(v => {
         const d = new Date(v.fecha);
         if (filtro === 'hoy') return isSameDay(d, now);
-        if (filtro === 'semana') {
-          const lunes = new Date(now); lunes.setDate(now.getDate() - now.getDay() + 1); lunes.setHours(0, 0, 0, 0);
-          return d >= lunes;
-        }
+        if (filtro === 'semana') { const l = new Date(now); l.setDate(now.getDate() - now.getDay() + 1); l.setHours(0, 0, 0, 0); return d >= l; }
         if (filtro === 'mes') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
         return true;
       });
-
-      if (!ventas.length) {
-        el.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;font-style:italic">No hay ventas en este período.</p>';
-        return;
-      }
-
-      // Agrupar por día
+      if (!ventas.length) { el.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;font-style:italic">No hay ventas en este período.</p>'; return; }
       const grupos = {};
-      ventas.forEach(v => {
-        const key = new Date(v.fecha).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-        if (!grupos[key]) grupos[key] = [];
-        grupos[key].push(v);
-      });
-
+      ventas.forEach(v => { const k = new Date(v.fecha).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); if (!grupos[k]) grupos[k] = []; grupos[k].push(v); });
       el.innerHTML = Object.entries(grupos).map(([dia, vs]) => {
         const tot = vs.reduce((a, v) => a + v.total, 0);
-        return `
-    <div class="dia-group">
+        return `<div class="dia-group">
       <div class="dia-header" onclick="toggleDia(this)">
-        <div>
-          <h4>${dia}</h4>
-          <div class="dia-count">${vs.length} venta${vs.length !== 1 ? 's' : ''}</div>
-        </div>
+        <div><h4>${dia}</h4><div class="dia-count">${vs.length} venta${vs.length !== 1 ? 's' : ''}</div></div>
         <div class="dia-total">$${fmt(tot)}</div>
       </div>
       <div class="dia-body">
         <table style="margin:0"><tbody>
-          ${vs.map(v => `
-            <tr>
-              <td style="font-size:0.78rem;color:var(--text-muted);width:80px">${new Date(v.fecha).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}</td>
-              <td>${v.descripcion}</td>
-              <td style="font-weight:600">$${fmt(v.total)}</td>
-            </tr>`).join('')}
+          ${vs.map(v => `<tr>
+            <td style="font-size:0.78rem;color:var(--text-muted);width:80px">${new Date(v.fecha).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}</td>
+            <td>${v.descripcion}</td>
+            ${v.vendedor ? `<td style="font-size:0.75rem;color:var(--text-muted)">${v.vendedor.split('@')[0]}</td>` : '<td></td>'}
+            <td style="font-weight:600">$${fmt(v.total)}</td>
+          </tr>`).join('')}
         </tbody></table>
       </div>
     </div>`;
       }).join('');
     }
 
-    window.toggleDia = function (header) {
-      header.nextElementSibling.classList.toggle('open');
-    };
-
+    window.toggleDia = function (h) { h.nextElementSibling.classList.toggle('open'); };
     window.filtrarVentas = function (f, btn) {
       state.filtroVentas = f;
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -2042,7 +2323,7 @@
       const total = +document.getElementById('manual-precio').value;
       const fecha = document.getElementById('manual-fecha').value;
       if (!desc || !total) { toast('Completá descripción y precio', 'error'); return; }
-      const venta = { id: Date.now().toString(), fecha: fecha ? new Date(fecha).toISOString() : new Date().toISOString(), descripcion: desc, total, items: [] };
+      const venta = { id: Date.now().toString(), fecha: fecha ? new Date(fecha).toISOString() : new Date().toISOString(), descripcion: desc, total, items: [], vendedor: currentUser?.email || 'manual' };
       await guardarVenta(venta);
       document.getElementById('manual-desc').value = '';
       document.getElementById('manual-precio').value = '';
@@ -2052,13 +2333,8 @@
 
     window.eliminarVenta = async function (i) {
       const v = state.ventas[i];
-      if (fbReady) {
-        await fbDeleteDoc(fbDoc(db, 'ventas', v.id));
-      } else {
-        state.ventas.splice(i, 1);
-        lsSet('ventas', state.ventas);
-        renderHistorial(); renderVentasDiarias(); renderStats();
-      }
+      if (fbReady) { await fbDeleteDoc(fbDoc(db, 'ventas', v.id)); }
+      else { state.ventas.splice(i, 1); lsSet('ventas', state.ventas); renderHistorial(); renderVentasDiarias(); renderStats(); }
       toast('🗑️ Venta eliminada', 'info');
     };
 
@@ -2074,93 +2350,60 @@
     window.guardarEditVenta = async function () {
       const i = +document.getElementById('edit-venta-idx').value;
       const v = state.ventas[i];
-      const upd = {
-        ...v,
-        descripcion: document.getElementById('edit-venta-desc').value.trim(),
-        total: +document.getElementById('edit-venta-total').value,
-        fecha: new Date(document.getElementById('edit-venta-fecha').value).toISOString(),
-      };
-      if (fbReady) {
-        await fbSetDoc(fbDoc(db, 'ventas', v.id), upd);
-      } else {
-        state.ventas[i] = upd;
-        lsSet('ventas', state.ventas);
-        renderHistorial(); renderVentasDiarias(); renderStats();
-      }
+      const upd = { ...v, descripcion: document.getElementById('edit-venta-desc').value.trim(), total: +document.getElementById('edit-venta-total').value, fecha: new Date(document.getElementById('edit-venta-fecha').value).toISOString() };
+      if (fbReady) { await fbSetDoc(fbDoc(db, 'ventas', v.id), upd); }
+      else { state.ventas[i] = upd; lsSet('ventas', state.ventas); renderHistorial(); renderVentasDiarias(); renderStats(); }
       cerrarModal('modal-edit-venta');
       toast('✓ Venta actualizada', 'success');
     };
 
     window.confirmarLimpiar = function () {
-      abrirConfirm('¿Limpiar historial completo?', '¿Estás seguro? Se eliminarán TODAS las ventas del historial. Esta acción no se puede deshacer.', async () => {
-        if (fbReady) {
-          const snap = await fbGetDocs(fbCollection(db, 'ventas'));
-          const batch = fbWriteBatch(db);
-          snap.forEach(d => batch.delete(d.ref));
-          await batch.commit();
-        } else {
-          state.ventas = [];
-          lsSet('ventas', []);
-          renderHistorial(); renderVentasDiarias(); renderStats();
-        }
+      abrirConfirm('¿Limpiar historial completo?', '¿Estás seguro? Se eliminarán TODAS las ventas. Esta acción no se puede deshacer.', async () => {
+        if (fbReady) { const snap = await fbGetDocs(fbCollection(db, 'ventas')); const batch = fbWriteBatch(db); snap.forEach(d => batch.delete(d.ref)); await batch.commit(); }
+        else { state.ventas = []; lsSet('ventas', []); renderHistorial(); renderVentasDiarias(); renderStats(); }
         toast('🗑️ Historial limpiado', 'info');
       });
     };
 
     // ═══════════════════════════════════════════════════════
-    //  EXPORTAR EXCEL
+    //  EXPORTAR
     // ═══════════════════════════════════════════════════════
     window.exportarExcel = function () {
       if (!state.ventas.length) { toast('No hay ventas para exportar', 'error'); return; }
-      const rows = state.ventas.map(v => ({
-        Fecha: fmtFecha(v.fecha),
-        Descripcion: v.descripcion,
-        Total: v.total
-      }));
-      const csv = ['Fecha,Descripcion,Total', ...rows.map(r => `"${r.Fecha}","${r.Descripcion}",${r.Total}`)].join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
+      const csv = ['Fecha,Vendedor,Descripcion,Total', ...state.ventas.map(v => `"${fmtFecha(v.fecha)}","${v.vendedor || ''}","${v.descripcion}",${v.total}`)].join('\n');
       const a = document.createElement('a');
-      a.href = url; a.download = `ventas-punto-gelato-${new Date().toISOString().slice(0, 10)}.csv`;
-      a.click(); URL.revokeObjectURL(url);
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+      a.download = `ventas-punto-gelato-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
       toast('📊 Exportado exitosamente', 'success');
     };
 
     // ═══════════════════════════════════════════════════════
-    //  IMPRIMIR TICKET
+    //  TICKET
     // ═══════════════════════════════════════════════════════
     window.imprimirTicket = function () {
-      const ul = window.open('', '_blank', 'width=320,height=500');
       const items = state.carrito.length ? state.carrito : state.ventas.slice(0, 1).map(v => ({ desc: v.descripcion, precio: v.total }));
       const total = items.reduce((a, i) => a + i.precio, 0);
-      ul.document.write(`<html><body style="font-family:monospace;font-size:13px;padding:1rem;max-width:300px">
-    <h2 style="text-align:center;font-size:1.1rem">🍦 Punto Gelato</h2>
+      const w = window.open('', '_blank', 'width=320,height=500');
+      w.document.write(`<html><body style="font-family:monospace;font-size:13px;padding:1rem;max-width:300px">
+    <h2 style="text-align:center">🍦 Punto Gelato</h2>
     <p style="text-align:center;font-size:0.75rem;color:#666">${new Date().toLocaleString('es-AR')}</p>
-    <hr>
-    ${items.map(i => `<div style="display:flex;justify-content:space-between"><span>${i.desc}</span><span>$${fmt(i.precio)}</span></div>`).join('')}
-    <hr>
-    <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:1.1rem"><span>TOTAL</span><span>$${fmt(total)}</span></div>
+    <hr>${items.map(i => `<div style="display:flex;justify-content:space-between"><span>${i.desc}</span><span>$${fmt(i.precio)}</span></div>`).join('')}
+    <hr><div style="display:flex;justify-content:space-between;font-weight:bold;font-size:1.1rem"><span>TOTAL</span><span>$${fmt(total)}</span></div>
     <p style="text-align:center;margin-top:1rem;font-size:0.75rem">¡Gracias por su compra!</p>
-    <script>window.print();window.close()<\/script>
-  </body></html>`);
+    <script>window.print();window.close()<\/script></body></html>`);
     };
 
     // ═══════════════════════════════════════════════════════
-    //  MODALES / CONFIRM
+    //  MODALES
     // ═══════════════════════════════════════════════════════
-    window.cerrarModal = function (id) {
-      document.getElementById(id).classList.remove('open');
-    };
-
-    document.querySelectorAll('.modal-overlay').forEach(m => {
-      m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
-    });
+    window.cerrarModal = function (id) { document.getElementById(id).classList.remove('open'); };
+    document.querySelectorAll('.modal-overlay').forEach(m => { m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }); });
 
     function abrirConfirm(titulo, msg, onOk) {
       document.getElementById('modal-confirm-title').textContent = titulo;
       document.getElementById('modal-confirm-msg').textContent = msg;
-      const btn = document.getElementById('modal-confirm-ok');
-      btn.onclick = () => { onOk(); cerrarModal('modal-confirm'); };
+      document.getElementById('modal-confirm-ok').onclick = () => { onOk(); cerrarModal('modal-confirm'); };
       document.getElementById('modal-confirm').classList.add('open');
     }
 
@@ -2169,8 +2412,7 @@
     // ═══════════════════════════════════════════════════════
     window.toast = function (msg, type = 'info') {
       const el = document.createElement('div');
-      el.className = `toast ${type}`;
-      el.textContent = msg;
+      el.className = `toast ${type}`; el.textContent = msg;
       document.getElementById('toasts').appendChild(el);
       setTimeout(() => el.remove(), 3000);
     };
@@ -2178,26 +2420,16 @@
     // ═══════════════════════════════════════════════════════
     //  HELPERS
     // ═══════════════════════════════════════════════════════
-    function fmt(n) {
-      return Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-    }
-
-    function fmtFecha(f) {
-      if (!f) return '—';
-      return new Date(f).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-    }
-
-    function isSameDay(a, b) {
-      return a.getDate() === b.getDate() && a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear();
-    }
+    function fmt(n) { return Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
+    function fmtFecha(f) { if (!f) return '—'; return new Date(f).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+    function isSameDay(a, b) { return a.getDate() === b.getDate() && a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear(); }
 
     // ═══════════════════════════════════════════════════════
     //  INIT
     // ═══════════════════════════════════════════════════════
+    window._esAdmin = false;
     document.getElementById('manual-fecha').value = new Date().toISOString().slice(0, 10);
-    cargarDesdeLS();
-    renderTodo();
-    autoConectar(); // intentar reconectar Firebase si hay credenciales guardadas
+    autoConectar();
 
   </script>
 </body>
