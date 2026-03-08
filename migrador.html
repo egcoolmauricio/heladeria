@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Migrar datos → Firebase</title>
+    <title>Migrar Punto Gelato → Firebase</title>
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap"
         rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
             --bg: #0a0a0f;
@@ -16,7 +15,6 @@
             --surface2: #1a1a26;
             --border: #25253a;
             --accent: #7c6aff;
-            --accent2: #b06aff;
             --green: #4fffb0;
             --yellow: #ffd166;
             --red: #ff6b6b;
@@ -39,19 +37,19 @@
         }
 
         .container {
-            max-width: 780px;
+            max-width: 760px;
             margin: 0 auto;
         }
 
         header {
-            margin-bottom: 3rem;
             text-align: center;
+            margin-bottom: 2.5rem;
         }
 
         header .icon {
-            font-size: 3rem;
+            font-size: 2.8rem;
             display: block;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             animation: float 3s ease-in-out infinite;
         }
 
@@ -59,42 +57,41 @@
 
             0%,
             100% {
-                transform: translateY(0);
+                transform: translateY(0)
             }
 
             50% {
-                transform: translateY(-8px);
+                transform: translateY(-7px)
             }
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 800;
         }
 
         h1 span {
-            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            background: linear-gradient(90deg, var(--accent), #b06aff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
             color: var(--muted);
-            margin-top: 0.5rem;
-            font-size: 0.95rem;
+            margin-top: 0.4rem;
+            font-size: 0.9rem;
         }
 
-        /* Config Firebase */
-        .config-card {
+        .card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
-        .config-card h2 {
-            font-size: 1rem;
+        .card h2 {
+            font-size: 0.95rem;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -102,16 +99,11 @@
             color: var(--yellow);
         }
 
-        .config-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
-        }
-
         .field {
             display: flex;
             flex-direction: column;
             gap: 0.3rem;
+            margin-bottom: 0.8rem;
         }
 
         .field label {
@@ -137,37 +129,45 @@
             border-color: var(--accent);
         }
 
-        .field input.full {
-            grid-column: 1 / -1;
+        .cfg-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
         }
 
-        .connect-btn {
-            width: 100%;
-            margin-top: 1rem;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            border: none;
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.65rem 1.2rem;
             border-radius: 10px;
-            padding: 0.8rem;
-            color: white;
             font-family: 'Syne', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 700;
+            font-size: 0.88rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s, transform 0.1s;
+            transition: all 0.18s;
+            border: none;
         }
 
-        .connect-btn:hover {
-            opacity: 0.9;
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #b06aff);
+            color: white;
+            width: 100%;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.85;
             transform: translateY(-1px);
         }
 
-        .connect-btn:disabled {
-            opacity: 0.4;
+        .btn-primary:disabled {
+            opacity: 0.35;
             cursor: not-allowed;
             transform: none;
         }
 
-        /* Status bar */
         .status-bar {
             display: flex;
             align-items: center;
@@ -175,7 +175,7 @@
             padding: 0.7rem 1rem;
             border-radius: 8px;
             font-size: 0.85rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             background: var(--surface);
             border: 1px solid var(--border);
         }
@@ -194,10 +194,6 @@
             animation: pulse 2s infinite;
         }
 
-        .dot.yellow {
-            background: var(--yellow);
-        }
-
         .dot.red {
             background: var(--red);
         }
@@ -206,130 +202,93 @@
 
             0%,
             100% {
-                opacity: 1;
+                opacity: 1
             }
 
             50% {
-                opacity: 0.5;
+                opacity: 0.5
             }
         }
 
-        /* Migration cards */
-        .methods {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .method-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .method-card h2 {
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .method-card p {
-            font-size: 0.83rem;
-            color: var(--muted);
-            line-height: 1.5;
-            flex: 1;
-        }
-
-        .preview-box {
+        .preview {
             background: var(--surface2);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.8rem;
+            border-radius: 10px;
+            padding: 1rem;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.75rem;
             color: var(--muted);
-            min-height: 60px;
+            margin: 1rem 0;
+            min-height: 80px;
         }
 
-        .preview-box .count {
-            font-size: 1.4rem;
+        .preview .big {
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--text);
             display: block;
-            margin-bottom: 0.2rem;
-        }
-
-        .action-btn {
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 0.7rem 1rem;
-            color: var(--text);
+            margin-bottom: 0.5rem;
             font-family: 'Syne', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s;
-            text-align: center;
         }
 
-        .action-btn:hover:not(:disabled) {
-            border-color: var(--accent);
-            color: var(--accent);
+        .preview .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid var(--border);
         }
 
-        .action-btn.primary {
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            border: none;
-            color: white;
+        .preview .row:last-child {
+            border-bottom: none;
         }
 
-        .action-btn.primary:hover:not(:disabled) {
-            opacity: 0.85;
-            color: white;
-        }
-
-        .action-btn:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-        }
-
-        .file-label {
-            display: block;
-            background: var(--surface2);
-            border: 1px dashed var(--border);
-            border-radius: 10px;
-            padding: 0.8rem 1rem;
-            color: var(--muted);
-            font-size: 0.83rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.15s;
-        }
-
-        .file-label:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .file-label.loaded {
-            border-color: var(--green);
+        .preview .val {
             color: var(--green);
-            border-style: solid;
         }
 
-        input[type="file"] {
+        .file-drop {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--muted);
+            font-size: 0.88rem;
+            display: block;
+        }
+
+        .file-drop:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .file-drop.loaded {
+            border-color: var(--green);
+            border-style: solid;
+            color: var(--green);
+        }
+
+        input[type=file] {
             display: none;
         }
 
-        /* Log */
+        .progress-wrap {
+            background: var(--surface2);
+            border-radius: 8px;
+            overflow: hidden;
+            height: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--green));
+            width: 0%;
+            transition: width 0.4s;
+        }
+
         .log-card {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -347,7 +306,7 @@
         }
 
         .log-header span {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: var(--muted);
             font-family: 'JetBrains Mono', monospace;
         }
@@ -355,8 +314,8 @@
         #log {
             padding: 1rem 1.2rem;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-            line-height: 1.8;
+            font-size: 0.76rem;
+            line-height: 1.9;
             max-height: 280px;
             overflow-y: auto;
             color: var(--muted);
@@ -371,35 +330,35 @@
         }
 
         #log .info {
-            color: var(--accent);
+            color: #7c6aff;
         }
 
         #log .warn {
             color: var(--yellow);
         }
 
-        .clear-log {
+        .clear-btn {
             background: none;
             border: 1px solid var(--border);
             border-radius: 6px;
             color: var(--muted);
             padding: 0.2rem 0.6rem;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             cursor: pointer;
             font-family: 'Syne', sans-serif;
         }
 
-        .clear-log:hover {
+        .clear-btn:hover {
             color: var(--text);
         }
 
-        @media (max-width: 600px) {
-            .methods {
+        @media(max-width:600px) {
+            .cfg-grid {
                 grid-template-columns: 1fr;
             }
 
-            .config-grid {
-                grid-template-columns: 1fr;
+            body {
+                padding: 1rem;
             }
         }
     </style>
@@ -407,373 +366,263 @@
 
 <body>
     <div class="container">
-
         <header>
-            <span class="icon">🚀</span>
-            <h1>Migrar datos a <span>Firebase</span></h1>
-            <p class="subtitle">Importá el historial de Punto Gelato desde localStorage o desde Excel</p>
+            <span class="icon">🍦</span>
+            <h1>Migrar a <span>Firebase</span></h1>
+            <p class="subtitle">Importa el backup completo: ventas, productos, precios, sabores y stock</p>
         </header>
 
-        <!-- Firebase Config -->
-        <div class="config-card">
+        <div class="card">
             <h2>⚙️ Credenciales Firebase</h2>
-            <div class="config-grid">
-                <div class="field" style="grid-column: 1/-1">
+            <div class="cfg-grid">
+                <div class="field" style="grid-column:1/-1">
                     <label>API KEY</label>
                     <input type="text" id="cfg-apiKey" placeholder="AIzaSy...">
                 </div>
                 <div class="field">
                     <label>PROJECT ID</label>
-                    <input type="text" id="cfg-projectId" placeholder="punto-gelato">
+                    <input type="text" id="cfg-projectId" placeholder="punto-gelato-xxxxx">
                 </div>
                 <div class="field">
                     <label>APP ID</label>
                     <input type="text" id="cfg-appId" placeholder="1:123:web:abc">
                 </div>
             </div>
-            <button class="connect-btn" id="btn-connect" onclick="conectarFirebase()">
-                Conectar a Firebase
-            </button>
+            <button class="btn btn-primary" id="btn-connect" onclick="conectarFirebase()">🔌 Conectar a
+                Firebase</button>
         </div>
 
-        <!-- Status -->
         <div class="status-bar">
             <div class="dot" id="status-dot"></div>
             <span id="status-text">Esperando credenciales...</span>
         </div>
 
-        <!-- Migration methods -->
-        <div class="methods">
-
-            <!-- localStorage -->
-            <div class="method-card">
-                <h2>💾 Desde localStorage</h2>
-                <p>Detecta automáticamente los datos guardados en este navegador por Punto Gelato.</p>
-                <div class="preview-box" id="ls-preview">
-                    Hacé click en "Detectar" para escanear...
-                </div>
-                <button class="action-btn" onclick="detectarLocalStorage()">🔍 Detectar datos</button>
-                <button class="action-btn primary" id="btn-migrar-ls" disabled onclick="migrarDesdeLocalStorage()">
-                    ⬆️ Migrar a Firebase
-                </button>
+        <div class="card">
+            <h2>📂 Cargar archivo backup JSON</h2>
+            <p style="font-size:0.83rem;color:var(--muted);margin-bottom:1rem">
+                Seleccioná el archivo <code
+                    style="background:var(--surface2);padding:0.1rem 0.4rem;border-radius:4px;font-family:'JetBrains Mono',monospace">backup-punto-gelato.json</code>
+            </p>
+            <label class="file-drop" id="file-drop" for="file-input">
+                📁 Hacer click para seleccionar el archivo JSON
+            </label>
+            <input type="file" id="file-input" accept=".json" onchange="leerJSON(this)">
+            <div class="preview" id="json-preview">Cargá el archivo para ver el resumen...</div>
+            <div class="progress-wrap" id="progress-wrap">
+                <div class="progress-bar" id="progress-bar"></div>
             </div>
-
-            <!-- Excel -->
-            <div class="method-card">
-                <h2>📊 Desde Excel</h2>
-                <p>Subí el archivo .xlsx exportado desde Punto Gelato para importar el historial.</p>
-                <div class="preview-box" id="xl-preview">
-                    Seleccioná el archivo Excel...
-                </div>
-                <label class="file-label" id="file-label" for="file-input">
-                    📁 Seleccionar archivo .xlsx
-                </label>
-                <input type="file" id="file-input" accept=".xlsx,.xls,.csv" onchange="leerExcel(this)">
-                <button class="action-btn primary" id="btn-migrar-xl" disabled onclick="migrarDesdeExcel()">
-                    ⬆️ Migrar a Firebase
-                </button>
-            </div>
-
+            <button class="btn btn-primary" id="btn-migrar" disabled onclick="migrarTodo()">
+                ⬆️ Migrar todo a Firebase
+            </button>
         </div>
 
-        <!-- Log -->
         <div class="log-card">
             <div class="log-header">
                 <span>▸ consola de migración</span>
-                <button class="clear-log" onclick="limpiarLog()">limpiar</button>
+                <button class="clear-btn" onclick="document.getElementById('log').innerHTML=''">limpiar</button>
             </div>
             <div id="log">
-                <span class="info">— Listo para migrar. Completá las credenciales y conectate a Firebase.</span><br>
+                <span class="info">— Listo. Cargá las credenciales Firebase y el archivo JSON.</span><br>
             </div>
         </div>
-
     </div>
 
-    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import {
-            getFirestore, collection, addDoc, writeBatch, doc
-        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, writeBatch }
+            from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        window._fbReady = false;
-        window._db = null;
+        let db = null;
 
         window.conectarFirebase = async function () {
             const apiKey = document.getElementById('cfg-apiKey').value.trim();
             const projectId = document.getElementById('cfg-projectId').value.trim();
             const appId = document.getElementById('cfg-appId').value.trim();
-
-            if (!apiKey || !projectId || !appId) {
-                log('err', '✗ Completá todos los campos de configuración.');
-                return;
-            }
-
+            if (!apiKey || !projectId || !appId) { log('err', '✗ Completá los tres campos.'); return; }
             try {
-                log('info', '⟳ Conectando a Firebase...');
-                const app = initializeApp({
-                    apiKey,
-                    authDomain: `${projectId}.firebaseapp.com`,
-                    projectId,
-                    storageBucket: `${projectId}.appspot.com`,
-                    appId
-                }, 'migrador-' + Date.now());
-
-                window._db = getFirestore(app);
-                window._fbCollection = collection;
-                window._fbAddDoc = addDoc;
-                window._fbWriteBatch = writeBatch;
-                window._fbDoc = doc;
+                log('info', '⟳ Conectando...');
+                const app = initializeApp({ apiKey, authDomain: `${projectId}.firebaseapp.com`, projectId, storageBucket: `${projectId}.appspot.com`, appId }, 'mg-' + Date.now());
+                db = getFirestore(app);
                 window._fbReady = true;
-
-                setStatus('green', `Conectado a "${projectId}"`);
-                log('ok', `✓ Conexión exitosa al proyecto: ${projectId}`);
+                document.getElementById('status-dot').className = 'dot green';
+                document.getElementById('status-text').textContent = `Conectado a "${projectId}"`;
                 document.getElementById('btn-connect').textContent = '✓ Conectado';
                 document.getElementById('btn-connect').disabled = true;
-
-                // Habilitar botones si ya hay datos cargados
-                if (window._lsData) document.getElementById('btn-migrar-ls').disabled = false;
-                if (window._xlData) document.getElementById('btn-migrar-xl').disabled = false;
-
+                log('ok', `✓ Conexión exitosa → ${projectId}`);
+                if (window._backupData) document.getElementById('btn-migrar').disabled = false;
             } catch (e) {
-                setStatus('red', 'Error de conexión');
-                log('err', '✗ Error: ' + e.message);
+                document.getElementById('status-dot').className = 'dot red';
+                document.getElementById('status-text').textContent = 'Error de conexión';
+                log('err', '✗ ' + e.message);
             }
         };
 
-        // ─── MIGRAR DESDE LOCALSTORAGE ────────────────────────────────────────────
+        window.migrarTodo = async function () {
+            if (!window._fbReady || !db) { log('err', '✗ Conectate a Firebase primero.'); return; }
+            if (!window._backupData) { log('err', '✗ Cargá el archivo JSON primero.'); return; }
 
-        window.migrarDesdeLocalStorage = async function () {
-            if (!window._fbReady) { log('err', '✗ Conectate a Firebase primero.'); return; }
-            if (!window._lsData || window._lsData.length === 0) { log('warn', '⚠ No hay datos para migrar.'); return; }
-
-            const datos = window._lsData;
-            log('info', `⟳ Migrando ${datos.length} registros desde localStorage...`);
-
-            let ok = 0, errores = 0;
-            const batch = window._fbWriteBatch(window._db);
-            const colRef = window._fbCollection(window._db, 'ventas');
-
-            for (const venta of datos) {
-                try {
-                    const docRef = window._fbDoc(colRef);
-                    batch.set(docRef, {
-                        fecha: venta.fecha || venta.date || new Date().toISOString(),
-                        descripcion: venta.descripcion || venta.description || venta.items?.map(i => i.descripcion || i.nombre || i.name).join(', ') || 'Venta importada',
-                        total: parseFloat(venta.total || venta.price || 0),
-                        items: venta.items || [],
-                        importado: true,
-                        fuente: 'localStorage'
-                    });
-                    ok++;
-                } catch (e) {
-                    errores++;
-                    log('err', `✗ Error en registro ${ok + errores}: ${e.message}`);
-                }
-            }
+            const hd = window._backupData;
+            const btn = document.getElementById('btn-migrar');
+            btn.disabled = true; btn.textContent = '⟳ Migrando...';
+            const pw = document.getElementById('progress-wrap');
+            const pb = document.getElementById('progress-bar');
+            pw.style.display = 'block';
+            let paso = 0;
+            const av = (n) => { paso += n; pb.style.width = (paso / 5 * 100) + '%'; };
 
             try {
-                await batch.commit();
-                log('ok', `✓ ${ok} ventas migradas exitosamente desde localStorage.`);
-                if (errores > 0) log('warn', `⚠ ${errores} registros con error.`);
-                document.getElementById('btn-migrar-ls').textContent = '✓ Migrado';
-                document.getElementById('btn-migrar-ls').disabled = true;
-            } catch (e) {
-                log('err', '✗ Error al escribir en Firestore: ' + e.message);
-            }
-        };
+                // 1. PRECIOS
+                log('info', '⟳ [1/5] Migrando precios...');
+                const p = hd.precios || {};
+                await setDoc(doc(db, 'configuracion', 'precios'), {
+                    s1: p['1_gusto'] || p.s1 || 0,
+                    s2: p['2_gustos'] || p.s2 || 0,
+                    s3: p['3_gustos'] || p.s3 || 0,
+                    p250: p['1_4kg'] || p.p250 || 0,
+                    p500: p['1_2kg'] || p.p500 || 0,
+                    p1k: p['1kg'] || p.p1k || 0,
+                });
+                log('ok', '✓ Precios migrados → s1:' + (p['1_gusto'] || 0) + ' s2:' + (p['2_gustos'] || 0) + ' s3:' + (p['3_gustos'] || 0));
+                av(1);
 
-        // ─── MIGRAR DESDE EXCEL ───────────────────────────────────────────────────
+                // 2. SABORES
+                log('info', '⟳ [2/5] Migrando sabores...');
+                const sabores = hd.sabores || [];
+                await setDoc(doc(db, 'configuracion', 'sabores'), { lista: sabores });
+                log('ok', `✓ ${sabores.length} sabores: ${sabores.join(', ')}`);
+                av(1);
 
-        window.migrarDesdeExcel = async function () {
-            if (!window._fbReady) { log('err', '✗ Conectate a Firebase primero.'); return; }
-            if (!window._xlData || window._xlData.length === 0) { log('warn', '⚠ No hay datos del Excel para migrar.'); return; }
+                // 3. STOCK
+                log('info', '⟳ [3/5] Migrando stock...');
+                const s = hd.stockInsumos || hd.stock || {};
+                await setDoc(doc(db, 'configuracion', 'stock'), {
+                    cucuruchos: s.cucuruchos || 0,
+                    potes250: s.potes_1_4 || s.potes250 || 0,
+                    potes500: s.potes_1_2 || s.potes500 || 0,
+                    potes1kg: s.potes_1kg || s.potes1kg || 0,
+                });
+                log('ok', `✓ Stock: ${s.cucuruchos || 0} cucuruchos, ${s.potes_1_4 || 0} potes 1/4, ${s.potes_1_2 || 0} potes 1/2, ${s.potes_1kg || 0} potes 1kg`);
+                av(1);
 
-            const datos = window._xlData;
-            log('info', `⟳ Migrando ${datos.length} registros desde Excel...`);
+                // 4. PRODUCTOS ENVASADOS
+                log('info', '⟳ [4/5] Migrando productos envasados...');
+                const productos = hd.productosEnvasados || hd.productos || [];
+                await setDoc(doc(db, 'configuracion', 'productos'), { lista: productos });
+                log('ok', `✓ ${productos.length} productos migrados.`);
+                av(1);
 
-            // Firestore batch máximo 500 docs, dividir si es necesario
-            const chunks = [];
-            for (let i = 0; i < datos.length; i += 499) chunks.push(datos.slice(i, i + 499));
+                // 5. VENTAS en batches de 499
+                const ventas = hd.ventas || [];
+                log('info', `⟳ [5/5] Migrando ${ventas.length} ventas...`);
+                const colRef = collection(db, 'ventas');
+                const chunks = [];
+                for (let i = 0; i < ventas.length; i += 499) chunks.push(ventas.slice(i, i + 499));
 
-            let ok = 0;
-            const colRef = window._fbCollection(window._db, 'ventas');
-
-            for (const chunk of chunks) {
-                const batch = window._fbWriteBatch(window._db);
-                for (const row of chunk) {
-                    const docRef = window._fbDoc(colRef);
-                    batch.set(docRef, {
-                        fecha: parsearFecha(row.Fecha || row.fecha || row.Date || row.date),
-                        descripcion: row.Descripcion || row.descripcion || row.Description || row.Producto || row.producto || 'Venta importada',
-                        total: parseFloat(String(row.Total || row.total || row.Precio || row.precio || 0).replace(/[^0-9.]/g, '')),
-                        items: [],
-                        importado: true,
-                        fuente: 'excel'
-                    });
-                    ok++;
+                let ventasOk = 0;
+                for (let ci = 0; ci < chunks.length; ci++) {
+                    const batch = writeBatch(db);
+                    for (const v of chunks[ci]) {
+                        const ref = doc(colRef);
+                        batch.set(ref, {
+                            id: ref.id,
+                            fecha: v.fecha || new Date().toISOString(),
+                            descripcion: v.items?.map(i => i.descripcion || i.nombre || '').filter(Boolean).join(' | ') || v.descripcion || 'Venta importada',
+                            total: parseFloat(v.total || 0),
+                            items: v.items || [],
+                            importado: true,
+                            fuente: 'backup-json'
+                        });
+                        ventasOk++;
+                    }
+                    await batch.commit();
+                    log('ok', `✓ Lote ${ci + 1}/${chunks.length} — ${chunks[ci].length} ventas`);
                 }
-                await batch.commit();
-                log('ok', `✓ Lote de ${chunk.length} registros enviado.`);
+                av(1);
+
+                // RESUMEN FINAL
+                pb.style.background = 'var(--green)';
+                const totalH = (hd.ventasTotales || ventas.reduce((a, v) => a + parseFloat(v.total || 0), 0));
+                log('ok', '');
+                log('ok', '══════════════════════════════════════');
+                log('ok', '  ✓ MIGRACIÓN COMPLETA');
+                log('ok', `  Precios configurados`);
+                log('ok', `  Sabores:   ${sabores.length}`);
+                log('ok', `  Productos: ${productos.length}`);
+                log('ok', `  Ventas:    ${ventasOk}`);
+                log('ok', `  Total histórico: $${totalH.toLocaleString('es-AR')}`);
+                log('ok', '══════════════════════════════════════');
+                btn.textContent = '✓ Migración completa';
+                btn.style.background = 'var(--green)';
+                btn.style.color = '#000';
+
+            } catch (e) {
+                log('err', '✗ Error: ' + e.message);
+                btn.disabled = false;
+                btn.textContent = '⬆️ Reintentar';
             }
-
-            log('ok', `✓ ${ok} ventas migradas exitosamente desde Excel.`);
-            document.getElementById('btn-migrar-xl').textContent = '✓ Migrado';
-            document.getElementById('btn-migrar-xl').disabled = true;
-        };
-
-        function parsearFecha(val) {
-            if (!val) return new Date().toISOString();
-            if (typeof val === 'number') {
-                // Número serial de Excel
-                const d = new Date(Math.round((val - 25569) * 86400 * 1000));
-                return d.toISOString();
-            }
-            const d = new Date(val);
-            return isNaN(d) ? new Date().toISOString() : d.toISOString();
-        }
-
-        window.setStatus = function (color, text) {
-            document.getElementById('status-dot').className = 'dot ' + color;
-            document.getElementById('status-text').textContent = text;
         };
     </script>
 
     <script>
-        // ─── DETECTAR LOCALSTORAGE ────────────────────────────────────────────────
-        window._lsData = null;
+        window._backupData = null;
 
-        function detectarLocalStorage() {
-            log('info', '⟳ Escaneando localStorage...');
-
-            // Intentar todas las keys posibles que usa Punto Gelato
-            const posiblesKeys = ['ventas', 'historialVentas', 'sales', 'ventasData', 'puntoGelato_ventas'];
-            let datos = null;
-            let keyEncontrada = null;
-
-            for (const key of posiblesKeys) {
-                const raw = localStorage.getItem(key);
-                if (raw) {
-                    try {
-                        const parsed = JSON.parse(raw);
-                        if (Array.isArray(parsed) && parsed.length > 0) {
-                            datos = parsed;
-                            keyEncontrada = key;
-                            break;
-                        }
-                    } catch (e) { /* no era JSON */ }
-                }
-            }
-
-            // Si no encontramos con keys conocidas, buscar en todo el localStorage
-            if (!datos) {
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    try {
-                        const val = JSON.parse(localStorage.getItem(key));
-                        if (Array.isArray(val) && val.length > 0 && val[0].total !== undefined) {
-                            datos = val;
-                            keyEncontrada = key;
-                            break;
-                        }
-                    } catch (e) { }
-                }
-            }
-
-            if (datos && datos.length > 0) {
-                window._lsData = datos;
-                const primer = datos[0];
-                const ultimo = datos[datos.length - 1];
-                document.getElementById('ls-preview').innerHTML = `
-        <span class="count">${datos.length} ventas</span>
-        Key: "${keyEncontrada}"<br>
-        Primera: ${formatFecha(primer.fecha || primer.date)}<br>
-        Última: ${formatFecha(ultimo.fecha || ultimo.date)}<br>
-        Total aprox: $${datos.reduce((a, v) => a + parseFloat(v.total || 0), 0).toLocaleString('es-AR')}
-      `;
-                log('ok', `✓ Encontradas ${datos.length} ventas en key "${keyEncontrada}".`);
-                if (window._fbReady) document.getElementById('btn-migrar-ls').disabled = false;
-            } else {
-                document.getElementById('ls-preview').innerHTML = '<span style="color:#ff6b6b">No se encontraron datos de ventas en este navegador.</span>';
-                log('warn', '⚠ No se encontraron datos de ventas en localStorage. ¿Estás en la misma PC/navegador donde se usó Punto Gelato?');
-            }
-        }
-
-        // ─── LEER EXCEL ───────────────────────────────────────────────────────────
-        window._xlData = null;
-
-        function leerExcel(input) {
+        window.leerJSON = function (input) {
             const file = input.files[0];
             if (!file) return;
-
-            const label = document.getElementById('file-label');
-            label.textContent = '⟳ Leyendo...';
-
+            const drop = document.getElementById('file-drop');
+            drop.textContent = '⟳ Leyendo...';
             const reader = new FileReader();
             reader.onload = function (e) {
                 try {
-                    const wb = XLSX.read(e.target.result, { type: 'array' });
-                    const sheet = wb.Sheets[wb.SheetNames[0]];
-                    const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+                    const raw = JSON.parse(e.target.result);
+                    // Soportar: { heladeriaData: {...} } o { ventas: [...], precios: {...}, ... }
+                    const hd = raw.heladeriaData || raw;
+                    if (!hd.ventas && !hd.precios) throw new Error('Formato no reconocido.');
+                    window._backupData = hd;
 
-                    if (rows.length === 0) {
-                        log('err', '✗ El archivo Excel está vacío o no tiene el formato esperado.');
-                        label.textContent = '📁 Seleccionar archivo .xlsx';
-                        return;
-                    }
+                    const ventas = hd.ventas || [];
+                    const productos = hd.productosEnvasados || hd.productos || [];
+                    const sabores = hd.sabores || [];
+                    const stock = hd.stockInsumos || hd.stock || {};
+                    const totalV = ventas.reduce((a, v) => a + parseFloat(v.total || 0), 0);
+                    const primera = ventas.length ? new Date(ventas[0].fecha).toLocaleDateString('es-AR') : '—';
+                    const ultima = ventas.length ? new Date(ventas[ventas.length - 1].fecha).toLocaleDateString('es-AR') : '—';
 
-                    window._xlData = rows;
-                    label.classList.add('loaded');
-                    label.textContent = `✓ ${file.name}`;
-
-                    // Mostrar preview
-                    const cols = Object.keys(rows[0]).join(', ');
-                    const total = rows.reduce((a, r) => {
-                        const v = parseFloat(String(r.Total || r.total || r.Precio || r.precio || 0).replace(/[^0-9.]/g, ''));
-                        return a + (isNaN(v) ? 0 : v);
-                    }, 0);
-
-                    document.getElementById('xl-preview').innerHTML = `
-          <span class="count">${rows.length} filas</span>
-          Columnas: ${cols}<br>
-          Total acumulado: $${total.toLocaleString('es-AR')}
+                    document.getElementById('json-preview').innerHTML = `
+          <span class="big">✓ Backup cargado correctamente</span>
+          <div class="row"><span>Ventas</span><span class="val">${ventas.length} registros</span></div>
+          <div class="row"><span>Primera venta</span><span class="val">${primera}</span></div>
+          <div class="row"><span>Última venta</span><span class="val">${ultima}</span></div>
+          <div class="row"><span>Total histórico</span><span class="val">$${totalV.toLocaleString('es-AR')}</span></div>
+          <div class="row"><span>Productos envasados</span><span class="val">${productos.length}</span></div>
+          <div class="row"><span>Sabores</span><span class="val">${sabores.length} (${sabores.slice(0, 3).join(', ')}...)</span></div>
+          <div class="row"><span>Stock cucuruchos</span><span class="val">${stock.cucuruchos || 0} unid.</span></div>
+          <div class="row"><span>Stock potes 1/4</span><span class="val">${stock.potes_1_4 || stock.potes250 || 0} unid.</span></div>
         `;
-
-                    log('ok', `✓ Excel leído: ${rows.length} filas, hoja "${wb.SheetNames[0]}".`);
-                    log('info', `  Columnas detectadas: ${cols}`);
-                    if (window._fbReady) document.getElementById('btn-migrar-xl').disabled = false;
-
+                    drop.classList.add('loaded');
+                    drop.textContent = `✓ ${file.name}`;
+                    log('ok', `✓ JSON válido: ${ventas.length} ventas, ${productos.length} productos, ${sabores.length} sabores.`);
+                    if (window._fbReady) document.getElementById('btn-migrar').disabled = false;
                 } catch (e) {
-                    log('err', '✗ Error leyendo el archivo: ' + e.message);
-                    label.textContent = '📁 Seleccionar archivo .xlsx';
+                    log('err', '✗ Error leyendo JSON: ' + e.message);
+                    drop.textContent = '📁 Hacer click para seleccionar el archivo JSON';
+                    drop.classList.remove('loaded');
                 }
             };
-            reader.readAsArrayBuffer(file);
-        }
-
-        // ─── UTILS ────────────────────────────────────────────────────────────────
-        function formatFecha(f) {
-            if (!f) return '—';
-            const d = new Date(f);
-            return isNaN(d) ? f : d.toLocaleDateString('es-AR');
-        }
+            reader.readAsText(file);
+        };
 
         function log(type, msg) {
             const el = document.getElementById('log');
             const line = document.createElement('span');
             line.className = type;
             const now = new Date().toLocaleTimeString('es-AR');
-            line.textContent = `[${now}] ${msg}`;
+            line.textContent = msg ? `[${now}] ${msg}` : '';
             el.appendChild(line);
             el.appendChild(document.createElement('br'));
             el.scrollTop = el.scrollHeight;
         }
-
-        function limpiarLog() {
-            document.getElementById('log').innerHTML = '';
-        }
     </script>
-
 </body>
 
 </html>
