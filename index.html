@@ -1689,7 +1689,7 @@
     //  FIREBASE SETUP + AUTH
     // ═══════════════════════════════════════════════════════
     let db = null, auth = null, fbReady = false, currentUser = null, currentRol = null;
-    let fbCollection, fbAddDoc, fbGetDocs, fbDoc, fbSetDoc, fbGetDoc, fbDeleteDoc, fbQuery, fbOrderBy, fbWriteBatch, onSnapshot;
+    let fbCollection, fbAddDoc, fbGetDocs, fbDoc, fbSetDoc, fbGetDoc, fbDeleteDoc, fbQuery, fbOrderBy, fbWriteBatch, onSnapshot, fbServerTimestamp;
 
     // Roles definidos por email — se guardan en Firestore colección "roles"
     // { email: "admin@x.com", rol: "admin" } | { email: "vend@x.com", rol: "vendedor" }
@@ -1702,7 +1702,7 @@
       fbCollection = fb.collection; fbAddDoc = fb.addDoc; fbGetDocs = fb.getDocs;
       fbDoc = fb.doc; fbSetDoc = fb.setDoc; fbGetDoc = fb.getDoc;
       fbDeleteDoc = fb.deleteDoc; fbQuery = fb.query; fbOrderBy = fb.orderBy;
-      fbWriteBatch = fb.writeBatch; onSnapshot = fb.onSnapshot;
+      fbWriteBatch = fb.writeBatch; onSnapshot = fb.onSnapshot; fbServerTimestamp = fb.serverTimestamp;
 
       const app = initializeApp(config, 'pg-' + Date.now());
       db = fb.getFirestore(app);
@@ -2267,7 +2267,7 @@
       state.stock.potes500 = Math.max(0, state.stock.potes500 - items.filter(i => i.desc.includes('1/2 Kg')).length);
       state.stock.potes1kg = Math.max(0, state.stock.potes1kg - items.filter(i => i.desc.includes('1 Kg') && !i.desc.includes('1/4') && !i.desc.includes('1/2')).length);
 
-      const venta = { id: Date.now().toString(), fecha: new Date().toISOString(), descripcion: desc, total, items, vendedor: currentUser?.email || 'local' };
+      const venta = { id: Date.now().toString(), fecha: fbReady ? fbServerTimestamp() : new Date().toISOString(), descripcion: desc, total, items, vendedor: currentUser?.email || 'local' };
       await guardarVenta(venta);
       await guardarProductos();
       lsSet('stock', state.stock);
@@ -2343,7 +2343,7 @@
       const now = new Date();
       const filtro = state.filtroVentas;
       let ventas = state.ventas.filter(v => {
-        const d = new Date(v.fecha);
+        const d = toDate(v.fecha);
         if (filtro === 'hoy') return isSameDay(d, now);
         if (filtro === 'semana') { const l = new Date(now); l.setDate(now.getDate() - now.getDay() + 1); l.setHours(0, 0, 0, 0); return d >= l; }
         if (filtro === 'mes') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
@@ -2351,7 +2351,7 @@
       });
       if (!ventas.length) { el.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;font-style:italic">No hay ventas en este período.</p>'; return; }
       const grupos = {};
-      ventas.forEach(v => { const k = new Date(v.fecha).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); if (!grupos[k]) grupos[k] = []; grupos[k].push(v); });
+      ventas.forEach(v => { const k = toDate(v.fecha).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); if (!grupos[k]) grupos[k] = []; grupos[k].push(v); });
       el.innerHTML = Object.entries(grupos).map(([dia, vs]) => {
         const tot = vs.reduce((a, v) => a + v.total, 0);
         return `<div class="dia-group">
@@ -2362,7 +2362,7 @@
       <div class="dia-body">
         <table style="margin:0"><tbody>
           ${vs.map(v => `<tr>
-            <td style="font-size:0.78rem;color:var(--text-muted);width:80px">${new Date(v.fecha).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}</td>
+            <td style="font-size:0.78rem;color:var(--text-muted);width:80px">${toDate(v.fecha).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}</td>
             <td>${v.descripcion}</td>
             ${v.vendedor ? `<td style="font-size:0.75rem;color:var(--text-muted)">${v.vendedor.split('@')[0]}</td>` : '<td></td>'}
             <td style="font-weight:600">$${fmt(v.total)}</td>
@@ -2383,10 +2383,10 @@
 
     function renderStats() {
       const now = new Date();
-      const hoy = state.ventas.filter(v => isSameDay(new Date(v.fecha), now));
+      const hoy = state.ventas.filter(v => isSameDay(toDate(v.fecha), now));
       const lunes = new Date(now); lunes.setDate(now.getDate() - now.getDay() + 1); lunes.setHours(0, 0, 0, 0);
-      const semana = state.ventas.filter(v => new Date(v.fecha) >= lunes);
-      const mes = state.ventas.filter(v => { const d = new Date(v.fecha); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); });
+      const semana = state.ventas.filter(v => toDate(v.fecha) >= lunes);
+      const mes = state.ventas.filter(v => { const d = toDate(v.fecha); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); });
       const sum = arr => arr.reduce((a, v) => a + v.total, 0);
       document.getElementById('stat-hoy').textContent = `$${fmt(sum(hoy))}`;
       document.getElementById('stat-hoy-count').textContent = `${hoy.length} transaccion${hoy.length !== 1 ? 'es' : ''}`;
@@ -2400,7 +2400,7 @@
       const total = +document.getElementById('manual-precio').value;
       const fecha = document.getElementById('manual-fecha').value;
       if (!desc || !total) { toast('Completá descripción y precio', 'error'); return; }
-      const venta = { id: Date.now().toString(), fecha: fecha ? new Date(fecha).toISOString() : new Date().toISOString(), descripcion: desc, total, items: [], vendedor: currentUser?.email || 'manual' };
+      const venta = { id: Date.now().toString(), fecha: fecha ? new Date(fecha).toISOString() : (fbReady ? fbServerTimestamp() : new Date().toISOString()), descripcion: desc, total, items: [], vendedor: currentUser?.email || 'manual' };
       await guardarVenta(venta);
       document.getElementById('manual-desc').value = '';
       document.getElementById('manual-precio').value = '';
@@ -2420,7 +2420,7 @@
       document.getElementById('edit-venta-idx').value = i;
       document.getElementById('edit-venta-desc').value = v.descripcion;
       document.getElementById('edit-venta-total').value = v.total;
-      document.getElementById('edit-venta-fecha').value = new Date(v.fecha).toISOString().slice(0, 10);
+      document.getElementById('edit-venta-fecha').value = toDate(v.fecha).toISOString().slice(0, 10);
       document.getElementById('modal-edit-venta').classList.add('open');
     };
 
@@ -2498,7 +2498,8 @@
     //  HELPERS
     // ═══════════════════════════════════════════════════════
     function fmt(n) { return Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
-    function fmtFecha(f) { if (!f) return '—'; return new Date(f).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+    function fmtFecha(f) { if (!f) return '—'; const d = f?.toDate ? f.toDate() : new Date(f); return isNaN(d) ? '—' : d.toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+    function toDate(f) { return f?.toDate ? f.toDate() : new Date(f); }
     function isSameDay(a, b) { return a.getDate() === b.getDate() && a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear(); }
 
     // ═══════════════════════════════════════════════════════
