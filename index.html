@@ -1833,18 +1833,44 @@
     async function autoConectar() {
       const cfg = localStorage.getItem('pg_fb_config');
       if (!cfg) {
-        // Primera vez en este dispositivo — mostrar formulario de setup
         document.getElementById('setup-firebase').style.display = 'block';
         document.getElementById('setup-login').style.display = 'none';
         return;
       }
-      // Hay config guardada — rellenar campos y mostrar login directo
+
       const { apiKey, projectId, appId } = JSON.parse(cfg);
       document.getElementById('fb-apikey').value = apiKey;
       document.getElementById('fb-projectid').value = projectId;
       document.getElementById('fb-appid').value = appId;
-      document.getElementById('setup-firebase').style.display = 'none';
-      document.getElementById('setup-login').style.display = 'block';
+
+      try {
+        const { fba, auth: authInst } = await inicializarFirebase({
+          apiKey, projectId, appId,
+          authDomain: `${projectId}.firebaseapp.com`,
+          storageBucket: `${projectId}.appspot.com`
+        });
+
+        // onAuthStateChanged: Firebase verifica si hay sesion guardada en el navegador
+        fba.onAuthStateChanged(authInst, async (user) => {
+          if (user) {
+            // Sesion activa — entrar directo sin pedir login
+            currentUser = user;
+            const rolSnap = await fbGetDoc(fbDoc(db, 'roles', user.uid));
+            const rol = rolSnap.exists() ? rolSnap.data().rol : 'vendedor';
+            aplicarRol(rol, user.email);
+            document.getElementById('auth-screen').style.display = 'none';
+            await cargarTodo();
+            escucharVentas();
+          } else {
+            // Sin sesion — mostrar login
+            document.getElementById('setup-firebase').style.display = 'none';
+            document.getElementById('setup-login').style.display = 'block';
+          }
+        });
+      } catch (e) {
+        document.getElementById('setup-firebase').style.display = 'none';
+        document.getElementById('setup-login').style.display = 'block';
+      }
     }
 
     window.guardarSetup = async function () {
